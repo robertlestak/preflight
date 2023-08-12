@@ -37,14 +37,11 @@ env:
   FOO: "" # an empty value will check for the existence of the variable
 
 id:
-- provider: kube
-  kube:
+- kube:
     serviceAccount: hello-world
-- provider: aws
-  aws:
+- aws:
     arn: arn:aws:iam::123456789012:role/hello-world
-- provider: gcp
-  gcp:
+- gcp:
     email: example@my-project.google.com
 
 netpath:
