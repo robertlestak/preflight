@@ -12,6 +12,10 @@ if [ "$ARCH" = "x86_64" ]; then
     ARCH="amd64"
 fi
 
+if [ "$ARCH" = "aarch64" ]; then
+    ARCH="arm64"
+fi
+
 # GitHub repository and release URL
 REPO_OWNER="robertlestak"
 REPO_NAME="preflight"
