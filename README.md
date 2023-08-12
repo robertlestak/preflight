@@ -21,6 +21,8 @@ curl -sSL https://raw.githubusercontent.com/robertlestak/preflight/main/scripts/
 
 `preflight` is configured using a YAML or JSON file. The default location is a `preflight.yml` file in the current working directory, but you can specify a different location using the `-config` flag.
 
+Whereas each preflight driver accepts a single operational input, `preflight` accepts a list of inputs for each driver. This allows you to check multiple endpoints, environment variables, etc. in a single run.
+
 ```yaml
 dns:
 - endpoint: https://example.com
@@ -62,5 +64,43 @@ Usage of preflight:
 ```
 
 ```bash
-$ preflight
+$ preflight -config preflight.yaml
+```
+
+## Docker
+
+`preflight` is also available as a Docker image. There are two image types available:
+
+- slim: a minimal image with only the `preflight` binary
+- full: an image with both the `preflight` binary and all of the preflight driver binaries
+
+Each individual driver also implements its own Docker image, which can be used to run the driver as a standalone container.
+
+### Building
+
+#### Slim Image
+
+```bash
+make docker-slim
+```
+
+#### Full Image
+
+```bash
+make docker-full
+```
+
+### Running
+
+```bash
+kubectl debug -n my-namespace -it --image=robertlestak/preflight-slim:latest -c preflight --attach my-pod -- sh
+```
+
+```bash
+kubectl -n my-namespace -c preflight cp preflight.yaml my-pod:/preflight.yaml
+```
+
+```bash
+# now in your debug session, you can run
+preflight -config /preflight.yaml
 ```

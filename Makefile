@@ -35,3 +35,13 @@ bin/preflight_windows_arm64.exe:
 install: bin
 	@echo "Installing preflight..."
 	@scp bin/preflight_$$(go env GOOS)_$$(go env GOARCH) /usr/local/bin/preflight
+
+.PHONY: docker-slim
+docker-slim:
+	@echo "Building preflight-slim..."
+	@docker buildx build -t preflight-slim -f Dockerfile-slim . --load
+
+.PHONY: docker-full
+docker-full:
+	@echo "Building preflight..."
+	@docker buildx build -t preflight -f Dockerfile-full . --load
