@@ -63,6 +63,16 @@ Usage of preflight:
         path to config file (default "preflight.yaml")
   -log-level string
         log level (default "info")
+  -remote string
+        remote preflight server to run checks against
+  -remote-token string
+        token to use when running remote checks
+  -server
+        run in server mode
+  -server-addr string
+        server listen address (default ":8090")
+  -server-token string
+        token to use when running in server mode
 ```
 
 ```bash
@@ -139,3 +149,36 @@ kubectl -n my-namespace exec -it my-pod -- preflight-id -kube-service-account he
 # preflight-netpath
 kubectl -n my-namespace exec -it my-pod -- preflight-netpath -endpoint my-db:3306
 ```
+
+#### server mode
+
+`preflight` can also be started in server mode, which will then allow you to send requests to the server to run checks from your local `preflight` instance. This way you don't need to keep copying the configuration yaml file into the pod as you make changes.
+
+```bash
+# in one terminal, start the server
+kubectl debug -n my-namespace -it --image=robertlestak/preflight:latest -c preflight --attach my-pod -- preflight -server
+```
+
+```bash
+# in another terminal, forward the server port
+kubectl -n my-namespace port-forward my-pod 8090:8090
+```
+
+```bash
+# now back on your local machine, run your checks
+# against the remote server
+preflight -remote http://localhost:8090 -config preflight.yaml
+```
+
+You can also specify the remote within the config file itself:
+
+```yaml
+remote: http://localhost:8090
+dns:
+- endpoint: https://example.com
+  new: new-example.us-east-1.elb.amazonaws.com
+```
+
+```bash
+preflight -config preflight.yaml
+````

@@ -1,8 +1,11 @@
 package preflight
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"io"
+	"net/http"
 	"os"
 
 	"github.com/robertlestak/preflight-dns/pkg/preflightdns"
@@ -23,6 +26,8 @@ const (
 )
 
 type Preflight struct {
+	Remote      string                              `json:"remote" yaml:"remote"`
+	RemoteToken string                              `json:"remoteToken" yaml:"remoteToken"`
 	Concurrency int                                 `json:"concurrency" yaml:"concurrency"`
 	DNS         []preflightdns.PreflightDNS         `json:"dns" yaml:"dns"`
 	Env         map[string]string                   `json:"env" yaml:"env"`
@@ -173,10 +178,10 @@ func (p *Preflight) jobCount() int {
 	return c
 }
 
-func (p *Preflight) Run() error {
+func (p *Preflight) RunLocal() error {
 	l := log.WithFields(log.Fields{
 		"app": "preflight",
-		"fn":  "Run",
+		"fn":  "RunLocal",
 	})
 	l.Debug("running preflight checks")
 	if p.Concurrency == 0 {
@@ -224,4 +229,53 @@ func (p *Preflight) Run() error {
 		}
 	}
 	return nil
+}
+
+func (p *Preflight) RunRemote() error {
+	l := log.WithFields(log.Fields{
+		"app": "preflight",
+		"fn":  "RunRemote",
+	})
+	l.Debug("running remote preflight checks")
+	jd, err := json.Marshal(p)
+	if err != nil {
+		l.WithError(err).Error("unable to marshal preflight config")
+		return err
+	}
+	l.Debug("sending preflight config to remote server")
+	req, err := http.NewRequest(http.MethodPost, p.Remote, bytes.NewBuffer(jd))
+	if p.RemoteToken != "" {
+		req.Header.Set("Authorization", "token "+p.RemoteToken)
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		l.WithError(err).Error("unable to send preflight config to remote server")
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		// read body
+		bd, err := io.ReadAll(res.Body)
+		if err != nil {
+			l.WithError(err).Error("unable to read response body")
+			return err
+		}
+		l.WithField("body", string(bd)).Error("failed - remote preflight checks failed")
+		return errors.New("failed - remote preflight checks failed")
+	}
+	l.Debug("preflight checks passed")
+	return nil
+}
+
+func (p *Preflight) Run() error {
+	l := log.WithFields(log.Fields{
+		"app": "preflight",
+		"fn":  "Run",
+	})
+	l.Debug("running preflight checks")
+	if p.Remote != "" {
+		return p.RunRemote()
+	} else {
+		return p.RunLocal()
+	}
 }
