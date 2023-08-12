@@ -104,5 +104,3 @@ kubectl -n my-namespace -c preflight cp preflight.yaml my-pod:/preflight.yaml
 # now in your debug session, you can run
 preflight -config /preflight.yaml
 ```
-$ preflight
-```
