@@ -19,7 +19,7 @@ curl -sSL https://raw.githubusercontent.com/robertlestak/preflight/main/scripts/
 
 ## Configuration
 
-`preflight` is configured using a YAML or JSON file. The default location is a `preflight.yml` file in the current working directory, but you can specify a different location using the `-config` flag.
+`preflight` is configured using a YAML or JSON file. The default location is a `preflight.yaml` file in the current working directory, but you can specify a different location using the `-config` flag.
 
 ```yaml
 dns:
