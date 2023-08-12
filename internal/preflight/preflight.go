@@ -30,6 +30,13 @@ type Preflight struct {
 	Netpath     []preflightnetpath.PreflightNetPath `json:"netpath" yaml:"netpath"`
 }
 
+func SetLogger(l *log.Logger) {
+	preflightdns.Logger = l
+	preflightenv.Logger = l
+	preflightid.Logger = l
+	preflightnetpath.Logger = l
+}
+
 func LoadConfig(filepath string) (*Preflight, error) {
 	l := log.WithFields(log.Fields{
 		"package": "preflight",

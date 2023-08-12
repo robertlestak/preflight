@@ -31,6 +31,7 @@ func main() {
 		ll = log.InfoLevel
 	}
 	log.SetLevel(ll)
+	preflight.SetLogger(l.Logger)
 	l.WithField("log-level", ll).Debug("log level set")
 	l.WithField("config", *configFile).Debug("loading config file")
 	p, err := preflight.LoadConfig(*configFile)
