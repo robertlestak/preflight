@@ -39,8 +39,8 @@ func SetLogger(l *log.Logger) {
 
 func LoadConfig(filepath string) (*Preflight, error) {
 	l := log.WithFields(log.Fields{
-		"package": "preflight",
-		"fn":      "LoadConfig",
+		"app": "preflight",
+		"fn":  "LoadConfig",
 	})
 	l.Debug("loading config file")
 	p := Preflight{}
@@ -68,10 +68,26 @@ type PreflightJob struct {
 	Job    any                 `json:"job" yaml:"job"`
 }
 
+func (j *PreflightJob) LogError(err error) {
+	l := log.WithFields(log.Fields{
+		"preflight": j.Driver,
+		"details":   j.Job,
+	})
+	l.WithError(err).Error("failed")
+}
+
+func (j *PreflightJob) LogPass() {
+	l := log.WithFields(log.Fields{
+		"preflight": j.Driver,
+		"details":   j.Job,
+	})
+	l.Debug("passed")
+}
+
 func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 	l := log.WithFields(log.Fields{
-		"package": "preflight",
-		"fn":      "preflightDriverWorker",
+		"app": "preflight",
+		"fn":  "preflightDriverWorker",
 	})
 	l.Debug("starting worker")
 	for j := range jobs {
@@ -85,10 +101,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 				continue
 			}
 			if err := i.Run(); err != nil {
-				l.WithError(err).Error("unable to run job")
+				j.LogError(err)
 				res <- err
 				continue
 			}
+			j.LogPass()
 			res <- nil
 		case DriverNameEnv:
 			i, ok := j.Job.(preflightenv.PreflightEnv)
@@ -98,10 +115,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 				continue
 			}
 			if err := i.Run(); err != nil {
-				l.WithError(err).Error("unable to run job")
+				j.LogError(err)
 				res <- err
 				continue
 			}
+			j.LogPass()
 			res <- nil
 		case DriverNameID:
 			i, ok := j.Job.(preflightid.PreflightID)
@@ -111,10 +129,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 				continue
 			}
 			if err := i.Run(); err != nil {
-				l.WithError(err).Error("unable to run job")
+				j.LogError(err)
 				res <- err
 				continue
 			}
+			j.LogPass()
 			res <- nil
 		case DriverNameNetPath:
 			i, ok := j.Job.(preflightnetpath.PreflightNetPath)
@@ -124,10 +143,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 				continue
 			}
 			if err := i.Run(); err != nil {
-				l.WithError(err).Error("unable to run job")
+				j.LogError(err)
 				res <- err
 				continue
 			}
+			j.LogPass()
 			res <- nil
 		default:
 			l.WithField("driver", j.Driver).Error("invalid driver")
@@ -139,8 +159,8 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 
 func (p *Preflight) jobCount() int {
 	l := log.WithFields(log.Fields{
-		"package": "preflight",
-		"fn":      "jobCount",
+		"app": "preflight",
+		"fn":  "jobCount",
 	})
 	l.Debug("counting jobs")
 	c := 0
@@ -155,8 +175,8 @@ func (p *Preflight) jobCount() int {
 
 func (p *Preflight) Run() error {
 	l := log.WithFields(log.Fields{
-		"package": "preflight",
-		"fn":      "Run",
+		"app": "preflight",
+		"fn":  "Run",
 	})
 	l.Debug("running preflight checks")
 	if p.Concurrency == 0 {
