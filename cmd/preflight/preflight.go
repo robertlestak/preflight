@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/robertlestak/preflight/internal/preflight"
+	"github.com/robertlestak/preflight/pkg/preflight"
 	log "github.com/sirupsen/logrus"
 )
 
