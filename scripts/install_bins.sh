@@ -35,6 +35,8 @@ install_bin() {
 
     if [ -z "$asset_url" ]; then
         echo "No matching binary release found for your OS and architecture."
+        echo "OS: $OS"
+        echo "Architecture: $ARCH"
         exit 1
     fi
 

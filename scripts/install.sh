@@ -26,6 +26,8 @@ asset_url=$(echo "$release_info" | jq -r ".assets[] | select(.name == \"$asset_n
 
 if [ -z "$asset_url" ]; then
     echo "No matching binary release found for your OS and architecture."
+    echo "OS: $OS"
+    echo "Architecture: $ARCH"
     exit 1
 fi
 
