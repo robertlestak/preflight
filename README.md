@@ -157,15 +157,11 @@ kubectl -n my-namespace exec -it my-pod -- preflight-netpath -endpoint my-db:330
 ```bash
 # in one terminal, start the server
 kubectl debug -n my-namespace -it --image=robertlestak/preflight:latest -c preflight --attach my-pod -- preflight -server
-```
 
-```bash
 # in another terminal, forward the server port
 kubectl -n my-namespace port-forward my-pod 8090:8090
-```
 
-```bash
-# now back on your local machine, run your checks
+# now on your local machine, run your checks
 # against the remote server
 preflight -remote http://localhost:8090 -config preflight.yaml
 ```
