@@ -93,7 +93,7 @@ make docker-full
 ### Running
 
 ```bash
-kubectl debug -n my-namespace -it --image=robertlestak/preflight-slim:latest -c preflight --attach my-pod -- sh
+kubectl debug -n my-namespace -it --image=robertlestak/preflight:latest -c preflight --attach my-pod -- sh
 ```
 
 ```bash
