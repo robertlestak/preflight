@@ -9,6 +9,14 @@
 - [preflight-id](https://github.com/robertlestak/preflight-id)
 - [preflight-netpath](https://github.com/robertlestak/preflight-netpath)
 
+## Install
+
+NOTE: you will need `curl`, `bash`, and `jq` installed for the install script to work. It will attempt to install the binary in `/usr/local/bin` and will require `sudo` access. You can override the install directory by setting the `INSTALL_DIR` environment variable.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/robertlestak/preflight/main/scripts/install.sh | bash
+```
+
 ## Configuration
 
 `preflight` is configured using a YAML or JSON file. The default location is a `preflight.yml` file in the current working directory, but you can specify a different location using the `-config` flag.
