@@ -65,7 +65,7 @@ Usage of preflight:
   -config string
         path to config file (default "preflight.yaml")
   -log-level string
-        log level (default "debug")
+        log level (default "info")
 ```
 
 ```bash
