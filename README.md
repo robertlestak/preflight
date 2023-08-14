@@ -17,6 +17,12 @@ NOTE: you will need `curl`, `bash`, and `jq` installed for the install script to
 curl -sSL https://raw.githubusercontent.com/robertlestak/preflight/main/scripts/install.sh | bash
 ```
 
+### Install All Driver Binaries
+
+```bash
+curl -sSL https://raw.githubusercontent.com/robertlestak/preflight/main/scripts/install_bins.sh | bash
+```
+
 ## Configuration
 
 `preflight` is configured using a YAML or JSON file. The default location is a `preflight.yaml` file in the current working directory, but you can specify a different location using the `-config` flag.
