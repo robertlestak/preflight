@@ -79,8 +79,8 @@ github.com/robertlestak/preflight-dns v0.0.4 h1:OIwyrefnbZB4fcNW5Un3GrWqOEvOAebd
 github.com/robertlestak/preflight-dns v0.0.4/go.mod h1:mTVJxaUSWyHRsCBd6o2xPI884FURbdiQYstlH0hZXAM=
 github.com/robertlestak/preflight-env v0.0.4 h1:QMuUrJv0BibLGm8x8OweJL/sVANelITOLRdjvVlYtRc=
 github.com/robertlestak/preflight-env v0.0.4/go.mod h1:zUgiXhdqVFNTECNueAkjDSiInPJ+Y5cQTtQWIph2sFk=
-github.com/robertlestak/preflight-id v0.0.5 h1:xjXVlVd6DM5hwM8BQ/1dbr4ryEi5nX9kp4MVV1Sz57c=
-github.com/robertlestak/preflight-id v0.0.5/go.mod h1:MJqK/ofEVDvUri8nQ/VcMWSBIeTqy5rJV2tiGCpRNzc=
+github.com/robertlestak/preflight-id v0.0.6 h1:350pWlXmzSf7WMbpD5hQGdjcxrodFCCNw40ek4SbDsI=
+github.com/robertlestak/preflight-id v0.0.6/go.mod h1:MJqK/ofEVDvUri8nQ/VcMWSBIeTqy5rJV2tiGCpRNzc=
 github.com/robertlestak/preflight-netpath v0.0.4 h1:/HiVvSC0+2wIvb+RjKC9F6BOSuNhdkvgoH4Gc+380+Y=
 github.com/robertlestak/preflight-netpath v0.0.4/go.mod h1:cPEupy19BK+bAL+P3sjPdbHN2qKEEyi1xBJ2CaSo7G0=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
