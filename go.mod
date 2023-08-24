@@ -3,10 +3,10 @@ module github.com/robertlestak/preflight
 go 1.21.0
 
 require (
-	github.com/robertlestak/preflight-dns v0.0.4
-	github.com/robertlestak/preflight-env v0.0.4
-	github.com/robertlestak/preflight-id v0.0.6
-	github.com/robertlestak/preflight-netpath v0.0.4
+	github.com/robertlestak/preflight-dns v0.0.5
+	github.com/robertlestak/preflight-env v0.0.6
+	github.com/robertlestak/preflight-id v0.0.7
+	github.com/robertlestak/preflight-netpath v0.0.6
 	github.com/sirupsen/logrus v1.9.3
 	gopkg.in/yaml.v3 v3.0.1
 )
