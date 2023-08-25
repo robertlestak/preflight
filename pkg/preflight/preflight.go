@@ -29,6 +29,7 @@ type Preflight struct {
 	Remote      string                              `json:"remote" yaml:"remote"`
 	RemoteToken string                              `json:"remoteToken" yaml:"remoteToken"`
 	Concurrency int                                 `json:"concurrency" yaml:"concurrency"`
+	Equivalent  bool                                `json:"equivalent" yaml:"equivalent"`
 	DNS         []preflightdns.PreflightDNS         `json:"dns" yaml:"dns"`
 	Env         map[string]string                   `json:"env" yaml:"env"`
 	ID          []preflightid.PreflightID           `json:"id" yaml:"id"`
@@ -69,8 +70,9 @@ func LoadConfig(filepath string) (*Preflight, error) {
 }
 
 type PreflightJob struct {
-	Driver PreflightDriverName `json:"driver" yaml:"driver"`
-	Job    any                 `json:"job" yaml:"job"`
+	Driver     PreflightDriverName `json:"driver" yaml:"driver"`
+	Job        any                 `json:"job" yaml:"job"`
+	Equivalent bool                `json:"equivalent" yaml:"equivalent"`
 }
 
 func (j *PreflightJob) LogError(err error) {
@@ -105,6 +107,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 				res <- errors.New("invalid job")
 				continue
 			}
+			if j.Equivalent {
+				i.EquivalentCmd()
+				res <- nil
+				continue
+			}
 			if err := i.Run(); err != nil {
 				j.LogError(err)
 				res <- err
@@ -117,6 +124,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 			if !ok {
 				l.WithField("job", j.Job).Error("invalid job")
 				res <- errors.New("invalid job")
+				continue
+			}
+			if j.Equivalent {
+				i.Equivalent()
+				res <- nil
 				continue
 			}
 			if err := i.Run(); err != nil {
@@ -133,6 +145,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 				res <- errors.New("invalid job")
 				continue
 			}
+			if j.Equivalent {
+				i.Equivalent()
+				res <- nil
+				continue
+			}
 			if err := i.Run(); err != nil {
 				j.LogError(err)
 				res <- err
@@ -145,6 +162,11 @@ func preflightDriverWorker(jobs chan PreflightJob, res chan error) {
 			if !ok {
 				l.WithField("job", j.Job).Error("invalid job")
 				res <- errors.New("invalid job")
+				continue
+			}
+			if j.Equivalent {
+				i.Equivalent()
+				res <- nil
 				continue
 			}
 			if err := i.Run(); err != nil {
@@ -196,8 +218,9 @@ func (p *Preflight) RunLocal() error {
 	}
 	for _, d := range p.DNS {
 		jobs <- PreflightJob{
-			Driver: DriverNameDNS,
-			Job:    d,
+			Driver:     DriverNameDNS,
+			Job:        d,
+			Equivalent: p.Equivalent,
 		}
 	}
 	if len(p.Env) > 0 {
@@ -205,20 +228,23 @@ func (p *Preflight) RunLocal() error {
 			EnvVars: p.Env,
 		}
 		jobs <- PreflightJob{
-			Driver: DriverNameEnv,
-			Job:    ev,
+			Driver:     DriverNameEnv,
+			Job:        ev,
+			Equivalent: p.Equivalent,
 		}
 	}
 	for _, d := range p.ID {
 		jobs <- PreflightJob{
-			Driver: DriverNameID,
-			Job:    d,
+			Driver:     DriverNameID,
+			Job:        d,
+			Equivalent: p.Equivalent,
 		}
 	}
 	for _, d := range p.Netpath {
 		jobs <- PreflightJob{
-			Driver: DriverNameNetPath,
-			Job:    d,
+			Driver:     DriverNameNetPath,
+			Job:        d,
+			Equivalent: p.Equivalent,
 		}
 	}
 	close(jobs)

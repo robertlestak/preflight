@@ -74,6 +74,7 @@ func main() {
 	serverToken := preflightFlags.String("server-token", "", "token to use when running in server mode")
 	remote := preflightFlags.String("remote", "", "remote preflight server to run checks against")
 	remoteToken := preflightFlags.String("remote-token", "", "token to use when running remote checks")
+	equiv := preflightFlags.Bool("equiv", false, "print equivalent command")
 	preflightFlags.Parse(os.Args[1:])
 	ll, err := log.ParseLevel(*logLevel)
 	if err != nil {
@@ -102,9 +103,14 @@ func main() {
 	if p.RemoteToken == "" && *remoteToken != "" {
 		p.RemoteToken = *remoteToken
 	}
+	if *equiv {
+		p.Equivalent = true
+	}
 	l.Debug("running preflight checks")
 	if err := p.Run(); err != nil {
 		l.WithError(err).Fatal("preflight checks failed")
 	}
-	l.Info("preflight checks passed")
+	if !*equiv {
+		l.Info("preflight checks passed")
+	}
 }
