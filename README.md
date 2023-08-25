@@ -67,6 +67,8 @@ Usage of preflight:
         number of concurrent checks to run (default 1)
   -config string
         path to config file (default "preflight.yaml")
+  -equiv
+        print equivalent command
   -log-level string
         log level (default "info")
   -remote string
